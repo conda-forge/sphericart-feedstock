@@ -10,7 +10,7 @@ source:
     sha256: 2f3d2672a20efd7cf400cce42d0648f04d16fe8abaf834d167a1b45ef2f87e46
 
 build:
-  number: 1
+  number: 2
   skip: true  # [cuda_compiler_version == "None"]
   skip: true  # [cuda_compiler_version == "11.8"]
   skip: true  # [win]
