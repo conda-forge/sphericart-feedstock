@@ -10,7 +10,7 @@ source:
     sha256: e5790e33c10460a84538ba3088b02fc5142a8af32a0c697bbad290f26f09093b
 
 build:
-  number: 0
+  number: 1
   skip: true  # [cuda_compiler_version == "None"]
   skip: true  # [cuda_compiler_version == "11.8"]
   skip: true  # [win]
@@ -44,7 +44,7 @@ requirements:
     - pytorch
     - setuptools
   run:
-    - numpy <2.0.0
+    - numpy
     - python
     - pytorch
 
