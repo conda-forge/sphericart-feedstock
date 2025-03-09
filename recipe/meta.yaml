@@ -44,7 +44,7 @@ requirements:
     - pytorch
     - setuptools
   run:
-    - numpy <2.0.0
+    - numpy
     - python
     - pytorch
 
