@@ -51,7 +51,7 @@ requirements:
 test:
   imports:
     - sphericart
-    - sphericart.torch  # [cuda_compiler_version == "None"]
+    - sphericart.torch  # [cuda_compiler_version != "None"]
   commands:
     - pip check
   requires:
