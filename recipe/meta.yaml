@@ -37,6 +37,7 @@ outputs:
         - pytorch     # [build_platform != target_platform]
         - setuptools  # [build_platform != target_platform]
       host:
+        - cmake
         - cuda-version {{ cuda_compiler_version }}
         - cuda-nvcc
         - cuda-toolkit
@@ -79,6 +80,7 @@ outputs:
         - pytorch     # [build_platform != target_platform]
         - setuptools  # [build_platform != target_platform]
       host:
+        - cmake
         - cuda-version {{ cuda_compiler_version }}
         - cuda-nvcc
         - cuda-toolkit
