@@ -89,6 +89,7 @@ outputs:
         - pytorch
         - setuptools
       run:
+        - {{ pin_subpackage("sphericart", exact=True) }}
         - numpy
         - python
         - pytorch
