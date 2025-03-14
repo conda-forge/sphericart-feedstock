@@ -15,47 +15,92 @@ build:
   skip: true  # [cuda_compiler_version == "11.8"]
   skip: true  # [win]
 
-requirements:
-  build:
-    - {{ compiler("c") }}
-    - {{ compiler("cxx") }}
-    - {{ compiler("cuda") }}
-    - {{ stdlib("c") }}
-    - cmake
-    - cuda-nvcc
-    - cuda-toolkit
-    - libgomp
-    - llvm-openmp
-    - make
-    - ninja
-    - pip         # [build_platform != target_platform]
-    - pybind11    # [build_platform != target_platform]
-    - python      # [build_platform != target_platform]
-    - pytorch     # [build_platform != target_platform]
-    - setuptools  # [build_platform != target_platform]
-  host:
-    - cuda-version {{ cuda_compiler_version }}
-    - cuda-nvcc
-    - cuda-toolkit
-    - libgomp
-    - llvm-openmp
-    - pip
-    - python
-    - pytorch
-    - setuptools
-  run:
-    - numpy
-    - python
-    - pytorch
+outputs:
+  - name: sphericart
+    script: build.sh  # [unix]
+    build:
+    requirements:
+      build:
+        - {{ compiler("c") }}
+        - {{ compiler("cxx") }}
+        - {{ compiler("cuda") }}
+        - {{ stdlib("c") }}
+        - cmake
+        - cuda-nvcc
+        - cuda-toolkit
+        - libgomp
+        - llvm-openmp
+        - make
+        - ninja
+        - pip         # [build_platform != target_platform]
+        - pybind11    # [build_platform != target_platform]
+        - python      # [build_platform != target_platform]
+        - pytorch     # [build_platform != target_platform]
+        - setuptools  # [build_platform != target_platform]
+      host:
+        - cuda-version {{ cuda_compiler_version }}
+        - cuda-nvcc
+        - cuda-toolkit
+        - libgomp
+        - llvm-openmp
+        - pip
+        - python
+        - pytorch
+        - setuptools
+      run:
+        - numpy
+        - python
+        - pytorch
+    test:
+      imports:
+        - sphericart
+      commands:
+        - pip check
+      requires:
+        - pip
 
-test:
-  imports:
-    - sphericart
-    - sphericart.torch  # [cuda_compiler_version != "None"]
-  commands:
-    - pip check
-  requires:
-    - pip
+  - name: sphericart-torch
+    script: build_torch.sh  # [unix]
+    build:
+    requirements:
+      build:
+        - {{ compiler("c") }}
+        - {{ compiler("cxx") }}
+        - {{ compiler("cuda") }}
+        - {{ stdlib("c") }}
+        - cmake
+        - cuda-nvcc
+        - cuda-toolkit
+        - libgomp
+        - llvm-openmp
+        - make
+        - ninja
+        - pip         # [build_platform != target_platform]
+        - pybind11    # [build_platform != target_platform]
+        - python      # [build_platform != target_platform]
+        - pytorch     # [build_platform != target_platform]
+        - setuptools  # [build_platform != target_platform]
+      host:
+        - cuda-version {{ cuda_compiler_version }}
+        - cuda-nvcc
+        - cuda-toolkit
+        - libgomp
+        - llvm-openmp
+        - pip
+        - python
+        - pytorch
+        - setuptools
+      run:
+        - numpy
+        - python
+        - pytorch
+    test:
+      imports:
+        - sphericart.torch  # [cuda_compiler_version != "None"]
+      commands:
+        - pip check
+      requires:
+        - pip
 
 about:
   home: https://github.com/lab-cosmo/sphericart
