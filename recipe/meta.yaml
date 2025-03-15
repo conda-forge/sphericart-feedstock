@@ -6,8 +6,8 @@ package:
   version: {{ version }}
 
 source:
-  - url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/sphericart-{{ version }}.tar.gz
-    sha256: e5790e33c10460a84538ba3088b02fc5142a8af32a0c697bbad290f26f09093b
+  - url: https://github.com/lab-cosmo/sphericart/archive/v{{ version }}.tar.gz
+    sha256: 05edc2a78afd6d7bfe792487efac0d63581c982eba0ea9f2be1cda37b75af680
 
 build:
   number: 1
