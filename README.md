@@ -75,6 +75,7 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-sphericart-green.svg)](https://anaconda.org/conda-forge/sphericart) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/sphericart.svg)](https://anaconda.org/conda-forge/sphericart) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/sphericart.svg)](https://anaconda.org/conda-forge/sphericart) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/sphericart.svg)](https://anaconda.org/conda-forge/sphericart) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-sphericart--torch-green.svg)](https://anaconda.org/conda-forge/sphericart-torch) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/sphericart-torch.svg)](https://anaconda.org/conda-forge/sphericart-torch) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/sphericart-torch.svg)](https://anaconda.org/conda-forge/sphericart-torch) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/sphericart-torch.svg)](https://anaconda.org/conda-forge/sphericart-torch) |
 
 Installing sphericart
 =====================
@@ -86,16 +87,16 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `sphericart` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `sphericart, sphericart-torch` can be installed with `conda`:
 
 ```
-conda install sphericart
+conda install sphericart sphericart-torch
 ```
 
 or with `mamba`:
 
 ```
-mamba install sphericart
+mamba install sphericart sphericart-torch
 ```
 
 It is possible to list all of the versions of `sphericart` available on your platform with `conda`:
