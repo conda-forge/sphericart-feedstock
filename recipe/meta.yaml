@@ -20,7 +20,7 @@ requirements:
     - {{ compiler("cxx") }}
     - {{ stdlib("c") }}
     - cmake
-    - libgomp
+    - libgomp      # [not osx]
     - llvm-openmp
     - make
     - ninja
@@ -35,7 +35,7 @@ requirements:
     - cuda-toolkit
     {% endif %}
   host:
-    - libgomp
+    - libgomp      # [not osx]
     - llvm-openmp
     - pip
     - python
@@ -69,7 +69,7 @@ outputs:
         - {{ compiler("cxx") }}
         - {{ stdlib("c") }}
         - cmake
-        - libgomp
+        - libgomp      # [not osx]
         - llvm-openmp
         - make
         - ninja
@@ -84,7 +84,7 @@ outputs:
         - cuda-toolkit
         {% endif %}
       host:
-        - libgomp
+        - libgomp      # [not osx]
         - llvm-openmp
         - pip
         - python
