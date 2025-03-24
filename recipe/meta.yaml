@@ -10,8 +10,7 @@ source:
     sha256: 03aea0ab859a3356a36e2813cef51516d7e87c76ebc7cc68a00aaf8318c681d2
 
 build:
-  number: 0
-  skip: true  # [cuda_compiler_version == "None"]
+  number: 1
   skip: true  # [cuda_compiler_version == "11.8"]
   skip: true  # [win]
 
@@ -19,11 +18,11 @@ requirements:
   build:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - {{ compiler("cuda") }}
+    - {{ compiler("cuda") }}  # [cuda_compiler_version != "None"]
     - {{ stdlib("c") }}
     - cmake
-    - cuda-nvcc
-    - cuda-toolkit
+    - cuda-nvcc     # [cuda_compiler_version != "None"]
+    - cuda-toolkit  # [cuda_compiler_version != "None"]
     - libgomp
     - llvm-openmp
     - make
@@ -34,9 +33,9 @@ requirements:
     - pytorch     # [build_platform != target_platform]
     - setuptools  # [build_platform != target_platform]
   host:
-    - cuda-version {{ cuda_compiler_version }}
-    - cuda-nvcc
-    - cuda-toolkit
+    - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
+    - cuda-nvcc     # [cuda_compiler_version != "None"]
+    - cuda-toolkit  # [cuda_compiler_version != "None"]
     - libgomp
     - llvm-openmp
     - pip
@@ -64,11 +63,11 @@ outputs:
       build:
         - {{ compiler("c") }}
         - {{ compiler("cxx") }}
-        - {{ compiler("cuda") }}
+        - {{ compiler("cuda") }}  # [cuda_compiler_version != "None"]
         - {{ stdlib("c") }}
         - cmake
-        - cuda-nvcc
-        - cuda-toolkit
+        - cuda-nvcc     # [cuda_compiler_version != "None"]
+        - cuda-toolkit  # [cuda_compiler_version != "None"]
         - libgomp
         - llvm-openmp
         - make
@@ -79,9 +78,9 @@ outputs:
         - pytorch     # [build_platform != target_platform]
         - setuptools  # [build_platform != target_platform]
       host:
-        - cuda-version {{ cuda_compiler_version }}
-        - cuda-nvcc
-        - cuda-toolkit
+        - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
+        - cuda-nvcc     # [cuda_compiler_version != "None"]
+        - cuda-toolkit  # [cuda_compiler_version != "None"]
         - libgomp
         - llvm-openmp
         - pip
