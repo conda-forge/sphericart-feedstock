@@ -18,11 +18,8 @@ requirements:
   build:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - {{ compiler("cuda") }}  # [cuda_compiler_version != "None"]
     - {{ stdlib("c") }}
     - cmake
-    - cuda-nvcc     # [cuda_compiler_version != "None"]
-    - cuda-toolkit  # [cuda_compiler_version != "None"]
     - libgomp
     - llvm-openmp
     - make
@@ -32,16 +29,23 @@ requirements:
     - python      # [build_platform != target_platform]
     - pytorch     # [build_platform != target_platform]
     - setuptools  # [build_platform != target_platform]
+    {% if cuda_compiler_version != "None" %}
+    - {{ compiler("cuda") }}
+    - cuda-nvcc
+    - cuda-toolkit
+    {% endif %}
   host:
-    - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-    - cuda-nvcc     # [cuda_compiler_version != "None"]
-    - cuda-toolkit  # [cuda_compiler_version != "None"]
     - libgomp
     - llvm-openmp
     - pip
     - python
     - pytorch
     - setuptools
+    {% if cuda_compiler_version != "None" %}
+    - {{ compiler("cuda") }}
+    - cuda-nvcc
+    - cuda-toolkit
+    {% endif %}
   run:
     - numpy
     - python
@@ -63,11 +67,8 @@ outputs:
       build:
         - {{ compiler("c") }}
         - {{ compiler("cxx") }}
-        - {{ compiler("cuda") }}  # [cuda_compiler_version != "None"]
         - {{ stdlib("c") }}
         - cmake
-        - cuda-nvcc     # [cuda_compiler_version != "None"]
-        - cuda-toolkit  # [cuda_compiler_version != "None"]
         - libgomp
         - llvm-openmp
         - make
@@ -77,16 +78,23 @@ outputs:
         - python      # [build_platform != target_platform]
         - pytorch     # [build_platform != target_platform]
         - setuptools  # [build_platform != target_platform]
+        {% if cuda_compiler_version != "None" %}
+        - {{ compiler("cuda") }}
+        - cuda-nvcc
+        - cuda-toolkit
+        {% endif %}
       host:
-        - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-        - cuda-nvcc     # [cuda_compiler_version != "None"]
-        - cuda-toolkit  # [cuda_compiler_version != "None"]
         - libgomp
         - llvm-openmp
         - pip
         - python
         - pytorch
         - setuptools
+        {% if cuda_compiler_version != "None" %}
+        - cuda-version {{ cuda_compiler_version }}
+        - cuda-nvcc
+        - cuda-toolkit
+        {% endif %}
       run:
         - {{ pin_subpackage("sphericart", exact=True) }}
         - numpy
