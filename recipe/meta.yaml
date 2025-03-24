@@ -10,8 +10,7 @@ source:
     sha256: 03aea0ab859a3356a36e2813cef51516d7e87c76ebc7cc68a00aaf8318c681d2
 
 build:
-  number: 0
-  skip: true  # [cuda_compiler_version == "None"]
+  number: 1
   skip: true  # [cuda_compiler_version == "11.8"]
   skip: true  # [win]
 
@@ -19,12 +18,9 @@ requirements:
   build:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - {{ compiler("cuda") }}
     - {{ stdlib("c") }}
     - cmake
-    - cuda-nvcc
-    - cuda-toolkit
-    - libgomp
+    - libgomp      # [not osx]
     - llvm-openmp
     - make
     - ninja
@@ -33,16 +29,23 @@ requirements:
     - python      # [build_platform != target_platform]
     - pytorch     # [build_platform != target_platform]
     - setuptools  # [build_platform != target_platform]
-  host:
-    - cuda-version {{ cuda_compiler_version }}
+    {% if cuda_compiler_version != "None" %}
+    - {{ compiler("cuda") }}
     - cuda-nvcc
     - cuda-toolkit
-    - libgomp
+    {% endif %}
+  host:
+    - libgomp      # [not osx]
     - llvm-openmp
     - pip
     - python
     - pytorch
     - setuptools
+    {% if cuda_compiler_version != "None" %}
+    - {{ compiler("cuda") }}
+    - cuda-nvcc
+    - cuda-toolkit
+    {% endif %}
   run:
     - numpy
     - python
@@ -64,12 +67,9 @@ outputs:
       build:
         - {{ compiler("c") }}
         - {{ compiler("cxx") }}
-        - {{ compiler("cuda") }}
         - {{ stdlib("c") }}
         - cmake
-        - cuda-nvcc
-        - cuda-toolkit
-        - libgomp
+        - libgomp      # [not osx]
         - llvm-openmp
         - make
         - ninja
@@ -78,16 +78,23 @@ outputs:
         - python      # [build_platform != target_platform]
         - pytorch     # [build_platform != target_platform]
         - setuptools  # [build_platform != target_platform]
-      host:
-        - cuda-version {{ cuda_compiler_version }}
+        {% if cuda_compiler_version != "None" %}
+        - {{ compiler("cuda") }}
         - cuda-nvcc
         - cuda-toolkit
-        - libgomp
+        {% endif %}
+      host:
+        - libgomp      # [not osx]
         - llvm-openmp
         - pip
         - python
         - pytorch
         - setuptools
+        {% if cuda_compiler_version != "None" %}
+        - cuda-version {{ cuda_compiler_version }}
+        - cuda-nvcc
+        - cuda-toolkit
+        {% endif %}
       run:
         - {{ pin_subpackage("sphericart", exact=True) }}
         - numpy
