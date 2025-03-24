@@ -6,3 +6,8 @@ conda_build:
 conda_forge_output_validation: true
 bot:
   automerge: true
+build_platform:
+  linux_ppc64le: linux_64
+provider:
+  linux_ppc64le: default
+test: native_and_emulated
