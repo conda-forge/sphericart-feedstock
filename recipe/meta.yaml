@@ -1,5 +1,5 @@
 {% set name = "sphericart" %}
-{% set version = "1.0.5" %}
+{% set version = "1.0.6" %}
 
 package:
   name: {{ name|lower }}
@@ -7,10 +7,10 @@ package:
 
 source:
   - url: https://github.com/lab-cosmo/sphericart/archive/v{{ version }}.tar.gz
-    sha256: d9af7801bff25ee3220469fbddb1e8fec6423fa663858156b0313398c467c374
+    sha256: 0adcdac1071f8a0dddfb60f815ea7c9bf8dabd0247df85050458ef9f01b57d85
 
 build:
-  number: 1
+  number: 0
   skip: true  # [cuda_compiler_version != "None" and ppc64le]
   skip: true  # [cuda_compiler_version == "11.8"]
   skip: true  # [win]
