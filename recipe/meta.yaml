@@ -1,5 +1,5 @@
 {% set name = "sphericart" %}
-{% set version = "1.0.7" %}
+{% set version = "1.0.8" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://github.com/lab-cosmo/sphericart/archive/v{{ version }}.tar.gz
-    sha256: 900480834dd8382dd57d2d15279e409e839273305bdde317808ae4f22dfb8d57
+    sha256: 50722ba8e48c94468448c8cc13ddd7a6723e557f864446906065c47bcc762d95
 
 build:
   number: 0
