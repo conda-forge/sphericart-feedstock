@@ -64,6 +64,7 @@ outputs:
     script: build_torch.sh  # [unix]
     build:
       skip: true  # [ppc64le]
+      skip: true  # [py>=314]
     requirements:
       build:
         - {{ compiler("c") }}
