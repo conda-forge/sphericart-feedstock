@@ -64,6 +64,8 @@ outputs:
     script: build_torch.sh  # [unix]
     build:
       skip: true  # [ppc64le]
+      # PyTorch does not provide Python 3.14 builds yet. Keep the base
+      # sphericart output enabled for py314 and skip only the torch output.
       skip: true  # [py>=314]
     requirements:
       build:
