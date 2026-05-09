@@ -10,7 +10,7 @@ source:
     sha256: 327f6617c529f5b7dab66b352aa2bfc653b627c95feaf1626b041fae4aabe959
 
 build:
-  number: 0
+  number: 1
   skip: true  # [cuda_compiler_version != "None" and ppc64le]
   skip: true  # [cuda_compiler_version == "11.8"]
   skip: true  # [win]
@@ -64,6 +64,9 @@ outputs:
     script: build_torch.sh  # [unix]
     build:
       skip: true  # [ppc64le]
+      # PyTorch does not provide Python 3.14 builds yet. Keep the base
+      # sphericart output enabled for py314 and skip only the torch output.
+      skip: true  # [py>=314]
     requirements:
       build:
         - {{ compiler("c") }}
