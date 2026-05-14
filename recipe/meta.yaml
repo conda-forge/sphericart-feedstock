@@ -10,10 +10,10 @@ source:
     sha256: 327f6617c529f5b7dab66b352aa2bfc653b627c95feaf1626b041fae4aabe959
 
 build:
-  number: 1
-  skip: true  # [cuda_compiler_version != "None" and ppc64le]
+  number: 2
+  # Secondary Linux arches are enabled for CPU builds first.
+  skip: true  # [cuda_compiler_version != "None" and (ppc64le or aarch64 or win)]
   skip: true  # [cuda_compiler_version == "11.8"]
-  skip: true  # [win]
 
 requirements:
   build:
@@ -22,9 +22,9 @@ requirements:
     - {{ stdlib("c") }}
     - cmake
     - cross-python_{{ target_platform }}  # [build_platform != target_platform]
-    - libgomp      # [not osx]
-    - llvm-openmp
-    - make
+    - libgomp      # [linux]
+    - llvm-openmp  # [osx]
+    - make         # [unix]
     - ninja
     - pip         # [build_platform != target_platform]
     - pybind11    # [build_platform != target_platform]
@@ -36,8 +36,8 @@ requirements:
     - cuda-toolkit
     {% endif %}
   host:
-    - libgomp      # [not osx]
-    - llvm-openmp
+    - libgomp      # [linux]
+    - llvm-openmp  # [osx]
     - pip
     - python
     - setuptools
@@ -51,10 +51,13 @@ requirements:
     - python
 
 test:
+  files:
+    - run_test.py
   imports:
     - sphericart
   commands:
     - pip check
+    - python run_test.py
   requires:
     - pip
 
@@ -64,6 +67,10 @@ outputs:
     script: build_torch.sh  # [unix]
     build:
       skip: true  # [ppc64le]
+      # Current PyTorch pins make the torch output non-final on osx-arm64.
+      # Keep the base sphericart output enabled there.
+      skip: true  # [osx and arm64]
+      skip: true  # [win]
       # PyTorch does not provide Python 3.14 builds yet. Keep the base
       # sphericart output enabled for py314 and skip only the torch output.
       skip: true  # [py>=314]
@@ -74,9 +81,9 @@ outputs:
         - {{ stdlib("c") }}
         - cmake
         - cross-python_{{ target_platform }}  # [build_platform != target_platform]
-        - libgomp      # [not osx]
-        - llvm-openmp
-        - make
+        - libgomp      # [linux]
+        - llvm-openmp  # [osx]
+        - make         # [unix]
         - ninja
         - pip         # [build_platform != target_platform]
         - pybind11    # [build_platform != target_platform]
@@ -89,8 +96,8 @@ outputs:
         - cuda-toolkit
         {% endif %}
       host:
-        - libgomp      # [not osx]
-        - llvm-openmp
+        - libgomp      # [linux]
+        - llvm-openmp  # [osx]
         - pip
         - python
         - pytorch
@@ -106,10 +113,13 @@ outputs:
         - python
         - pytorch
     test:
+      files:
+        - run_test_torch.py
       imports:
-        - sphericart.torch  # [cuda_compiler_version != "None"]
+        - sphericart.torch
       commands:
         - pip check
+        - python run_test_torch.py
       requires:
         - pip
 
