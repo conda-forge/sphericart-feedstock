@@ -41,6 +41,7 @@ requirements:
     - pip
     - python
     - setuptools
+    - vcomp14      # [win]
     {% if cuda_compiler_version != "None" %}
     - {{ compiler("cuda") }}
     - cuda-nvcc
@@ -49,6 +50,7 @@ requirements:
   run:
     - numpy
     - python
+    - vcomp14  # [win]
 
 test:
   files:
@@ -66,7 +68,9 @@ outputs:
   - name: sphericart-torch
     script: build_torch.sh  # [unix]
     build:
-      skip: true  # [ppc64le]
+      # Cross-building PyTorch extensions links against build-platform
+      # libtorch, so keep the torch output on native platforms only.
+      skip: true  # [ppc64le or aarch64]
       # Current PyTorch pins make the torch output non-final on osx-arm64.
       # Keep the base sphericart output enabled there.
       skip: true  # [osx and arm64]
