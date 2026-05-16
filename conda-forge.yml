@@ -1,5 +1,6 @@
 azure:
   free_disk_space: true
+conda_build_tool: rattler-build
 bot:
   automerge: true
 build_platform:

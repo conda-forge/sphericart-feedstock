@@ -1,0 +1,186 @@
+schema_version: 1
+
+context:
+  name: sphericart
+  version: "1.0.9"
+  build_number: 3
+
+recipe:
+  name: ${{ name|lower }}-split
+  version: ${{ version }}
+
+source:
+  - url: https://github.com/lab-cosmo/sphericart/archive/v${{ version }}.tar.gz
+    sha256: 327f6617c529f5b7dab66b352aa2bfc653b627c95feaf1626b041fae4aabe959
+
+build:
+  # Secondary Linux arches are enabled for CPU builds first.
+  number: ${{ build_number }}
+  skip:
+    - cuda_compiler_version == "11.8"
+    - cuda_compiler_version != "None" and (ppc64le or aarch64 or win)
+
+outputs:
+  - package:
+      name: sphericart
+    build:
+      script:
+        file: ${{ "build.bat" if win else "build.sh" }}
+    requirements:
+      build:
+        - ${{ compiler("c") }}
+        - ${{ compiler("cxx") }}
+        - ${{ stdlib("c") }}
+        - cmake
+        - if: build_platform != target_platform
+          then:
+            - cross-python_${{ target_platform }}
+            - pip
+            - pybind11
+            - python
+            - setuptools
+        - if: linux
+          then: libgomp
+        - if: osx
+          then: llvm-openmp
+        - if: unix
+          then: make
+        - ninja
+        - if: cuda_compiler_version != "None"
+          then:
+            - ${{ compiler("cuda") }}
+            - cuda-nvcc
+            - cuda-toolkit
+      host:
+        - if: linux
+          then: libgomp
+        - if: osx
+          then: llvm-openmp
+        - pip
+        - python
+        - setuptools
+        - if: win
+          then: vcomp14
+        - if: cuda_compiler_version != "None"
+          then:
+            - ${{ compiler("cuda") }}
+            - cuda-nvcc
+            - cuda-toolkit
+      run:
+        - numpy
+        - python
+        - if: win
+          then: vcomp14
+    tests:
+      - python:
+          imports:
+            - sphericart
+          pip_check: true
+      - files:
+          recipe:
+            - run_test.py
+        requirements:
+          run:
+            - pip
+        script:
+          - python run_test.py
+
+  - package:
+      name: sphericart-torch
+    build:
+      # Cross-building PyTorch extensions links against build-platform
+      # libtorch, so keep the torch output on native platforms only.
+      # Current PyTorch pins make the torch output non-final on osx-arm64.
+      # Keep the base sphericart output enabled there.
+      # PyTorch does not provide Python 3.14 builds yet. Keep the base
+      # sphericart output enabled for py314 and skip only the torch output.
+      skip:
+        - ppc64le or aarch64
+        - osx and arm64
+        - win
+        - match(python, ">=3.14")
+      script:
+        file: build_torch.sh
+    requirements:
+      build:
+        - ${{ compiler("c") }}
+        - ${{ compiler("cxx") }}
+        - ${{ stdlib("c") }}
+        - cmake
+        - if: build_platform != target_platform
+          then:
+            - cross-python_${{ target_platform }}
+            - pip
+            - pybind11
+            - python
+            - setuptools
+        - if: build_platform != target_platform and cuda_compiler_version == "None"
+          then: pytorch * cpu*
+        - if: build_platform != target_platform and cuda_compiler_version != "None"
+          then: pytorch * cuda*
+        - if: linux
+          then: libgomp
+        - if: linux
+          then: llvm-openmp
+        - if: osx
+          then: llvm-openmp
+        - if: unix
+          then: make
+        - ninja
+        - if: cuda_compiler_version != "None"
+          then:
+            - ${{ compiler("cuda") }}
+            - cuda-nvcc
+            - cuda-toolkit
+      host:
+        - if: linux
+          then: libgomp
+        - if: linux
+          then: llvm-openmp
+        - if: osx
+          then: llvm-openmp
+        - pip
+        - python
+        - if: cuda_compiler_version == "None"
+          then: pytorch * cpu*
+        - if: cuda_compiler_version != "None"
+          then: pytorch * cuda*
+        - setuptools
+        - if: cuda_compiler_version != "None"
+          then:
+            - cuda-version ==${{ cuda_compiler_version }}
+            - cuda-nvcc
+            - cuda-toolkit
+      run:
+        - ${{ pin_subpackage("sphericart", exact=True) }}
+        - numpy
+        - python
+        - if: linux
+          then: llvm-openmp
+        - if: cuda_compiler_version == "None"
+          then: pytorch * cpu*
+        - if: cuda_compiler_version != "None"
+          then: pytorch * cuda*
+    tests:
+      - python:
+          imports:
+            - sphericart.torch
+          pip_check: true
+      - files:
+          recipe:
+            - run_test_torch.py
+        requirements:
+          run:
+            - pip
+        script:
+          - python run_test_torch.py
+
+about:
+  homepage: https://github.com/lab-cosmo/sphericart
+  summary: Multi-language library for the calculation of spherical harmonics in Cartesian coordinates
+  license: MIT
+  license_file: LICENSE.md
+
+extra:
+  recipe-maintainers:
+    - jeongseok-meta
