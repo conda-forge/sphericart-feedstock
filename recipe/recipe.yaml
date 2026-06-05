@@ -3,7 +3,7 @@ schema_version: 1
 context:
   name: sphericart
   version: "1.0.9"
-  build_number: 3
+  build_number: 4
 
 recipe:
   name: ${{ name|lower }}-split
@@ -114,14 +114,14 @@ outputs:
             - pybind11
             - python
             - setuptools
-        - if: build_platform != target_platform and cuda_compiler_version == "None"
-          then: pytorch * cpu*
+            - if: cuda_compiler_version == "None"
+              then: pytorch * cpu*
         - if: build_platform != target_platform and cuda_compiler_version != "None"
           then: pytorch * cuda*
         - if: linux
-          then: libgomp
-        - if: linux
-          then: llvm-openmp
+          then:
+            - libgomp
+            - llvm-openmp
         - if: osx
           then: llvm-openmp
         - if: unix
@@ -134,17 +134,16 @@ outputs:
             - cuda-toolkit
       host:
         - if: linux
-          then: libgomp
-        - if: linux
-          then: llvm-openmp
+          then:
+            - libgomp
+            - llvm-openmp
         - if: osx
           then: llvm-openmp
         - pip
         - python
         - if: cuda_compiler_version == "None"
           then: pytorch * cpu*
-        - if: cuda_compiler_version != "None"
-          then: pytorch * cuda*
+          else: pytorch * cuda*
         - setuptools
         - if: cuda_compiler_version != "None"
           then:
@@ -159,8 +158,7 @@ outputs:
           then: llvm-openmp
         - if: cuda_compiler_version == "None"
           then: pytorch * cpu*
-        - if: cuda_compiler_version != "None"
-          then: pytorch * cuda*
+          else: pytorch * cuda*
     tests:
       - python:
           imports:
