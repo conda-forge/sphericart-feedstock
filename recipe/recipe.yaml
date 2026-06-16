@@ -12,6 +12,8 @@ recipe:
 source:
   - url: https://github.com/lab-cosmo/sphericart/archive/v${{ version }}.tar.gz
     sha256: 5bcae3861d053c1e5ab5cac73bbe8811c5e0336bfeffcc4528f56a3b22cb2583
+    patches:
+      - respect-cmake-args.patch
 
 build:
   # Secondary Linux arches are enabled for CPU builds first.
@@ -149,6 +151,7 @@ outputs:
             - cuda-version ==${{ cuda_compiler_version }}
             - cuda-nvcc
             - cuda-toolkit
+            - nvtx-c
       run:
         - ${{ pin_subpackage("sphericart", exact=True) }}
         - numpy
