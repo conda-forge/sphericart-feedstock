@@ -1,0 +1,19 @@
+diff --git a/sphericart-torch/setup.py b/sphericart-torch/setup.py
+index 1c95489..1115ea5 100644
+--- a/sphericart-torch/setup.py
++++ b/sphericart-torch/setup.py
+@@ -1,4 +1,5 @@
+ import os
++import shlex
+ import shutil
+ import subprocess
+ import sys
+@@ -58,7 +59,7 @@ class cmake_ext(build_ext):
+ 
+         os.makedirs(build_dir, exist_ok=True)
+ 
+-        cmake_options = [
++        cmake_options = shlex.split(os.environ.get("CMAKE_ARGS", "")) + [
+             "-DCMAKE_BUILD_TYPE=Release",
+             f"-DCMAKE_INSTALL_PREFIX={install_dir}",
+             "-DSPHERICART_TORCH_BUILD_FOR_PYTHON=ON",
