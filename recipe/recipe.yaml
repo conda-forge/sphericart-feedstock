@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: sphericart
-  version: "2.0.0"
+  version: "2.0.1"
   build_number: 0
 
 recipe:
@@ -11,7 +11,7 @@ recipe:
 
 source:
   - url: https://github.com/lab-cosmo/sphericart/archive/v${{ version }}.tar.gz
-    sha256: 5bcae3861d053c1e5ab5cac73bbe8811c5e0336bfeffcc4528f56a3b22cb2583
+    sha256: 65b3da7d65b6169df8736933cde7d2cbd10a09414c38018c40a56df2a5fd30f8
     patches:
       - respect-cmake-args.patch
 
