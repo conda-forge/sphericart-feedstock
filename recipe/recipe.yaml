@@ -138,6 +138,15 @@ outputs:
         - if: cuda_compiler_version != "None"
           then:
             - cuda-version ==${{ cuda_compiler_version }}
+            # Development files for PyTorch's exported CUDA CMake targets.
+            # Keep this componentized: cuda-toolkit also pulls cuda-gdb,
+            # which is not available for all supported Python versions.
+            - cuda-nvrtc-dev
+            - libcublas-dev
+            - libcufft-dev
+            - libcurand-dev
+            - libcusolver-dev
+            - libcusparse-dev
             - nvtx-c
       run:
         - ${{ pin_subpackage("sphericart", exact=True) }}
@@ -148,6 +157,16 @@ outputs:
         - if: cuda_compiler_version == "None"
           then: pytorch * cpu*
           else: pytorch * cuda*
+      ignore_run_exports:
+        from_package:
+          - if: cuda_compiler_version != "None"
+            then:
+              - cuda-nvrtc-dev
+              - libcublas-dev
+              - libcufft-dev
+              - libcurand-dev
+              - libcusolver-dev
+              - libcusparse-dev
     tests:
       - python:
           imports:
