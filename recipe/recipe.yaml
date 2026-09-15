@@ -2,8 +2,8 @@ schema_version: 1
 
 context:
   name: sphericart
-  version: "2.0.3"
-  build_number: 1
+  version: "2.0.4"
+  build_number: 0
 
 recipe:
   name: ${{ name|lower }}-split
@@ -11,7 +11,7 @@ recipe:
 
 source:
   - url: https://github.com/lab-cosmo/sphericart/archive/v${{ version }}.tar.gz
-    sha256: f65170d8e5060b93a0b6b4dba8daaece5b2765eede1d9e45c4dff77c5cb6750f
+    sha256: 2eeaf6b2684e2059a77ef3226028c5363534d8c3d4fb9629efb954a528d49533
     patches:
       - respect-cmake-args.patch
 
@@ -33,7 +33,7 @@ outputs:
         - ${{ compiler("c") }}
         - ${{ compiler("cxx") }}
         - ${{ stdlib("c") }}
-        - cmake
+        - cmake >=3.27
         - if: build_platform != target_platform
           then:
             - cross-python_${{ target_platform }}
@@ -48,11 +48,6 @@ outputs:
         - if: unix
           then: make
         - ninja
-        - if: cuda_compiler_version != "None"
-          then:
-            - ${{ compiler("cuda") }}
-            - cuda-nvcc
-            - cuda-toolkit
       host:
         - if: linux
           then: libgomp
@@ -60,14 +55,10 @@ outputs:
           then: llvm-openmp
         - pip
         - python
-        - setuptools
+        - setuptools >=44
+        - wheel >=0.36
         - if: win
           then: vcomp14
-        - if: cuda_compiler_version != "None"
-          then:
-            - ${{ compiler("cuda") }}
-            - cuda-nvcc
-            - cuda-toolkit
       run:
         - numpy
         - python
@@ -108,7 +99,7 @@ outputs:
         - ${{ compiler("c") }}
         - ${{ compiler("cxx") }}
         - ${{ stdlib("c") }}
-        - cmake
+        - cmake >=3.30
         - if: build_platform != target_platform
           then:
             - cross-python_${{ target_platform }}
@@ -131,8 +122,6 @@ outputs:
         - if: cuda_compiler_version != "None"
           then:
             - ${{ compiler("cuda") }}
-            - cuda-nvcc
-            - cuda-toolkit
       host:
         - if: linux
           then:
@@ -145,12 +134,19 @@ outputs:
         - if: cuda_compiler_version == "None"
           then: pytorch * cpu*
           else: pytorch * cuda*
-        - setuptools
+        - setuptools >=77
         - if: cuda_compiler_version != "None"
           then:
             - cuda-version ==${{ cuda_compiler_version }}
-            - cuda-nvcc
-            - cuda-toolkit
+            # Development files for PyTorch's exported CUDA CMake targets.
+            # Keep this componentized: cuda-toolkit also pulls cuda-gdb,
+            # which is not available for all supported Python versions.
+            - cuda-nvrtc-dev
+            - libcublas-dev
+            - libcufft-dev
+            - libcurand-dev
+            - libcusolver-dev
+            - libcusparse-dev
             - nvtx-c
       run:
         - ${{ pin_subpackage("sphericart", exact=True) }}
@@ -161,6 +157,16 @@ outputs:
         - if: cuda_compiler_version == "None"
           then: pytorch * cpu*
           else: pytorch * cuda*
+      ignore_run_exports:
+        from_package:
+          - if: cuda_compiler_version != "None"
+            then:
+              - cuda-nvrtc-dev
+              - libcublas-dev
+              - libcufft-dev
+              - libcurand-dev
+              - libcusolver-dev
+              - libcusparse-dev
     tests:
       - python:
           imports:
@@ -178,9 +184,12 @@ outputs:
 about:
   homepage: https://github.com/lab-cosmo/sphericart
   summary: Multi-language library for the calculation of spherical harmonics in Cartesian coordinates
-  license: MIT
-  license_file: LICENSE.md
+  license: Apache-2.0 OR MIT
+  license_file:
+    - LICENSE-APACHE
+    - LICENSE-MIT
 
 extra:
+  feedstock-name: sphericart
   recipe-maintainers:
     - jeongseok-meta
