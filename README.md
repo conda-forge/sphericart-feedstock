@@ -5,7 +5,7 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/sphericart-feed
 
 Home: https://github.com/lab-cosmo/sphericart
 
-Package license: MIT
+Package license: Apache-2.0 OR MIT
 
 Summary: Multi-language library for the calculation of spherical harmonics in Cartesian coordinates
 
