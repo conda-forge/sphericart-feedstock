@@ -33,7 +33,7 @@ outputs:
         - ${{ compiler("c") }}
         - ${{ compiler("cxx") }}
         - ${{ stdlib("c") }}
-        - cmake
+        - cmake >=3.27
         - if: build_platform != target_platform
           then:
             - cross-python_${{ target_platform }}
@@ -48,11 +48,6 @@ outputs:
         - if: unix
           then: make
         - ninja
-        - if: cuda_compiler_version != "None"
-          then:
-            - ${{ compiler("cuda") }}
-            - cuda-nvcc
-            - cuda-toolkit
       host:
         - if: linux
           then: libgomp
@@ -60,14 +55,10 @@ outputs:
           then: llvm-openmp
         - pip
         - python
-        - setuptools
+        - setuptools >=44
+        - wheel >=0.36
         - if: win
           then: vcomp14
-        - if: cuda_compiler_version != "None"
-          then:
-            - ${{ compiler("cuda") }}
-            - cuda-nvcc
-            - cuda-toolkit
       run:
         - numpy
         - python
@@ -108,7 +99,7 @@ outputs:
         - ${{ compiler("c") }}
         - ${{ compiler("cxx") }}
         - ${{ stdlib("c") }}
-        - cmake
+        - cmake >=3.30
         - if: build_platform != target_platform
           then:
             - cross-python_${{ target_platform }}
@@ -131,8 +122,6 @@ outputs:
         - if: cuda_compiler_version != "None"
           then:
             - ${{ compiler("cuda") }}
-            - cuda-nvcc
-            - cuda-toolkit
       host:
         - if: linux
           then:
@@ -145,12 +134,10 @@ outputs:
         - if: cuda_compiler_version == "None"
           then: pytorch * cpu*
           else: pytorch * cuda*
-        - setuptools
+        - setuptools >=77
         - if: cuda_compiler_version != "None"
           then:
             - cuda-version ==${{ cuda_compiler_version }}
-            - cuda-nvcc
-            - cuda-toolkit
             - nvtx-c
       run:
         - ${{ pin_subpackage("sphericart", exact=True) }}
@@ -178,9 +165,12 @@ outputs:
 about:
   homepage: https://github.com/lab-cosmo/sphericart
   summary: Multi-language library for the calculation of spherical harmonics in Cartesian coordinates
-  license: MIT
-  license_file: LICENSE.md
+  license: Apache-2.0 OR MIT
+  license_file:
+    - LICENSE-APACHE
+    - LICENSE-MIT
 
 extra:
+  feedstock-name: sphericart
   recipe-maintainers:
     - jeongseok-meta
